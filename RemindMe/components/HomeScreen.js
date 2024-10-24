@@ -3,6 +3,7 @@ import { View, Text, TextInput, Button, Alert } from 'react-native';
 import { db, auth } from '../firebaseConfig'; 
 import { collection, addDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
+import HolidaysScreen from './HolidaysScreen';
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
@@ -13,36 +14,34 @@ export default function HomeScreen({ user }) {
       Alert.alert('Virhe', 'Täytä sekä nimi että ikä.');
       return;
     }
-
+  
     try {
       // Varmista että UID on olemassa
       if (!user?.uid) {
         Alert.alert('Virhe', 'Käyttäjä ei ole määritelty.');
         return;
       }
-
-      // Lisää uusi dokumentti käyttäjän persons-kokoelmaan
+  
+      console.log('Saving to Firestore for user:', user.uid);
+  
       await addDoc(collection(db, `users/${user.uid}/persons`), {
         name: name,
-        age: parseInt(age), // Muunna ikä numeroksi
+        age: parseInt(age),
       });
-      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, ikä: ${age}`);
       
+      console.log('Document saved successfully');
+      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, ikä: ${age}`);
+  
       setName('');
       setAge('');
     } catch (error) {
+      console.log('Error saving document:', error);
       Alert.alert('Virhe', 'Tietojen tallentaminen epäonnistui: ' + error.message);
     }
   };
+  
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      Alert.alert('Kirjauduit ulos!');
-    } catch (error) {
-      Alert.alert('Virhe', error.message);
-    }
-  };
+ 
 
   return (
     <View style={{ padding: 16, marginTop: 100 }}>
@@ -61,7 +60,8 @@ export default function HomeScreen({ user }) {
         onChangeText={setAge}
       />
       <Button title="Tallenna" onPress={savePerson} />
-      <Button title="Kirjaudu ulos" onPress={handleLogout} style={{ marginTop: 16 }} />
+      
+      <HolidaysScreen/>
     </View>
   );
 }
