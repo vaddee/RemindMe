@@ -26,7 +26,7 @@ export default function SavedNamesScreen() {
         renderItem={({ item }) => (
           <View style={{ padding: 8, borderBottomWidth: 1 }}>
             <Text>Name: {item.name}</Text>
-            <Text>Age: {item.age}</Text>
+            <Text>Birhday: {item.birthday}</Text>
           </View>
         )}
       />
