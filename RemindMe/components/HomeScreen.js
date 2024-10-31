@@ -1,14 +1,48 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
 import { db } from '../firebaseConfig';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import HolidaysScreen from './HolidaysScreen';
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
   const [birthday, setBirthday] = useState('');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [reminders, setReminders] = useState([]);
+
+  useEffect(() => {
+    if (user?.uid) {
+      fetchReminders();
+    }
+  }, [user]);
+
+  const fetchReminders = async () => {
+    try {
+      const remindersRef = collection(db, `users/${user.uid}/persons`);
+      const personsSnapshot = await getDocs(remindersRef);
+      const reminderList = [];
+
+      // Käy läpi jokaisen henkilön dokumentti
+      for (const personDoc of personsSnapshot.docs) {
+        const personData = personDoc.data();
+        const remindersSubcollection = collection(db, `users/${user.uid}/persons/${personDoc.id}/reminders`);
+        
+        const remindersSnapshot = await getDocs(remindersSubcollection);
+        remindersSnapshot.forEach((reminderDoc) => {
+          const reminderData = reminderDoc.data();
+          reminderList.push({
+            id: reminderDoc.id,
+            name: personData.name,
+            birthday: personData.birthday,
+            daysBefore: reminderData.daysBefore,
+          });
+        });
+      }
+      setReminders(reminderList);
+    } catch (error) {
+      console.log('Error fetching reminders:', error);
+    }
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -71,8 +105,20 @@ export default function HomeScreen({ user }) {
       />
 
       <Button title="Tallenna" onPress={savePerson} />
-      
-      
+
+      {/* Tulevat muistutukset */}
+      <Text style={{ fontSize: 24, marginVertical: 16 }}>Tulevat muistutukset</Text>
+      <FlatList
+        data={reminders}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={{ padding: 8, borderBottomWidth: 1 }}>
+            <Text>Henkilö: {item.name}</Text>
+            <Text>Syntymäpäivä: {item.birthday}</Text>
+            <Text>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
