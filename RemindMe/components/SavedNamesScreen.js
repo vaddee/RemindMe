@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, Button } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { collection, getDocs } from 'firebase/firestore';
 
@@ -18,6 +18,11 @@ export default function SavedNamesScreen() {
     fetchPersons();
   }, []);
 
+  const handleAddReminder = (person) => {
+    //t'nne logiikka
+    console.log(`Adding reminder for ${person.name}`)
+  }
+
   return (
     <View style={{ padding: 16 }}>
       <FlatList
@@ -27,6 +32,10 @@ export default function SavedNamesScreen() {
           <View style={{ padding: 8, borderBottomWidth: 1 }}>
             <Text>Name: {item.name}</Text>
             <Text>Birhday: {item.birthday}</Text>
+            <Button
+            title='lisaa muistutus'
+            onPress={() => handleAddReminder(item)}/>
+            
           </View>
         )}
       />
