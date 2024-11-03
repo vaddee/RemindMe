@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
 import { db } from '../firebaseConfig';
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import * as Notifications from 'expo-notifications';
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
@@ -14,6 +15,19 @@ export default function HomeScreen({ user }) {
     if (user?.uid) {
       fetchReminders();
     }
+    
+    // Kuuntelee ilmoituksen saapumista ja näyttää alertin
+    const subscription = Notifications.addNotificationReceivedListener(notification => {
+      const { title, body } = notification.request.content;
+      Alert.alert(
+        title,
+        body,
+        [{ text: "OK", onPress: () => console.log("Ilmoitus hyväksytty") }]
+      );
+    });
+
+    // Puhdistaa kuuntelijan, kun komponentti unmountataan
+    return () => subscription.remove();
   }, [user]);
 
   const fetchReminders = async () => {
@@ -22,7 +36,6 @@ export default function HomeScreen({ user }) {
       const personsSnapshot = await getDocs(remindersRef);
       const reminderList = [];
 
-      // Käy läpi jokaisen henkilön dokumentti
       for (const personDoc of personsSnapshot.docs) {
         const personData = personDoc.data();
         const remindersSubcollection = collection(db, `users/${user.uid}/persons/${personDoc.id}/reminders`);
