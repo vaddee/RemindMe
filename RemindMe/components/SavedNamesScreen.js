@@ -37,6 +37,7 @@ export default function SavedNamesScreen() {
 
   const requestPermissions = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
+    console.log("Notification permission status:", status);
     if (status !== 'granted') {
       Alert.alert("Ilmoituslupaa ei myönnetty");
     }
@@ -72,14 +73,15 @@ export default function SavedNamesScreen() {
     }
   };
 
-  const scheduleNotification = (person, daysBefore) => {
-    const birthday = new Date(person.birthday);
+ /*  const scheduleNotification = (person, daysBefore) => {
+    const [day, month, year] = person.birthday.split('.').map(Number); // Muunna syntymäpäivä Date-objektiksi
+    const birthday = new Date(year, month - 1, day);
     const reminderDate = new Date(birthday);
     reminderDate.setDate(birthday.getDate() - daysBefore);
-
+  
     const trigger = new Date(reminderDate);
     trigger.setHours(9, 0, 0);
-
+  
     Notifications.scheduleNotificationAsync({
       content: {
         title: "Muistutus",
@@ -88,7 +90,22 @@ export default function SavedNamesScreen() {
       },
       trigger,
     });
+  }; */
+  const scheduleNotification = (person, daysBefore) => {
+    console.log(`Scheduling notification for ${person.name} in 1 minute`);
+    const testTrigger = new Date(Date.now() + 60000); // 1 minuutti nykyhetkestä testin vuoksi
+    
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Testi-ilmoitus",
+        body: `${person.name} täyttää pian vuosia!`,
+        sound: true,
+      },
+      trigger: testTrigger,
+    });
   };
+  
+  
   const handleDeletePerson = async (person) => {
     Alert.alert(
       "Poista henkilö",
