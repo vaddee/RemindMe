@@ -93,7 +93,7 @@ export default function SavedNamesScreen() {
   }; */
   const scheduleNotification = (person, daysBefore) => {
     console.log(`Scheduling notification for ${person.name} in 1 minute`);
-    const testTrigger = new Date(Date.now() + 60000); // 1 minuutti nykyhetkestä testin vuoksi
+    const testTrigger = new Date(Date.now() + 10000); // 10sec nykyhetkestä testin vuoksi
     
     Notifications.scheduleNotificationAsync({
       content: {
