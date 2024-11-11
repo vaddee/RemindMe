@@ -10,6 +10,7 @@ export default function HomeScreen({ user }) {
   const [birthday, setBirthday] = useState('');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [reminders, setReminders] = useState([]);
+  const [intrest, setInterst] = useState('');
 
   useEffect(() => {
     if (user?.uid) {
@@ -86,9 +87,10 @@ export default function HomeScreen({ user }) {
       await addDoc(collection(db, `users/${user.uid}/persons`), {
         name: name,
         birthday: birthday,
+        intrest: intrest,
       });
 
-      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}`);
+      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest}`);
       setName('');
       setBirthday('');
     } catch (error) {
@@ -105,6 +107,13 @@ export default function HomeScreen({ user }) {
         placeholder="Syötä nimi"
         value={name}
         onChangeText={setName}
+      />
+
+<TextInput
+        style={{ borderBottomWidth: 1, marginBottom: 16, padding: 8 }}
+        placeholder="kiinnostuksen kohde"
+        value={intrest}
+        onChangeText={setInterst}
       />
       
       <Button title="Valitse syntymäpäivä" onPress={showDatePicker} />

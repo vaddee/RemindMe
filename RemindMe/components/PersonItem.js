@@ -1,7 +1,7 @@
 // PersonItem.js
 import React from 'react';
 import { View, Text, TouchableOpacity, Button } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // tuo MaterialIcons
+import { MaterialIcons } from '@expo/vector-icons'; 
 
 export default function PersonItem({ person, onAddReminder, onDelete }) {
   return (
@@ -9,6 +9,7 @@ export default function PersonItem({ person, onAddReminder, onDelete }) {
       <View>
         <Text>Name: {person.name}</Text>
         <Text>Birthday: {person.birthday}</Text>
+        <Text>Intrest: {person.intrest}</Text>
         <Button title="Lisää muistutus" onPress={() => onAddReminder(person)} />
       </View>
       <TouchableOpacity onPress={() => onDelete(person)}>
