@@ -1,11 +1,12 @@
 // SavedNamesScreen.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, FlatList, Alert } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import * as Notifications from 'expo-notifications';
 import ReminderModal from './ReminderModal';
 import PersonItem from './PersonItem';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function SavedNamesScreen() {
   const [savedPersons, setSavedPersons] = useState([]);
@@ -13,15 +14,15 @@ export default function SavedNamesScreen() {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [daysBefore, setDaysBefore] = useState('');
 
-  useEffect(() => {
-    const fetchPersons = async () => {
-      if (!auth.currentUser) return;
-      const personsRef = collection(db, `users/${auth.currentUser.uid}/persons`);
-      const snapshot = await getDocs(personsRef);
-      const personsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-      setSavedPersons(personsList);
-    };
+  const fetchPersons = async () => {
+    if (!auth.currentUser) return;
+    const personsRef = collection(db, `users/${auth.currentUser.uid}/persons`);
+    const snapshot = await getDocs(personsRef);
+    const personsList = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+    setSavedPersons(personsList);
+  };
 
+  useEffect(() => {
     fetchPersons();
 
     Notifications.setNotificationHandler({
@@ -34,6 +35,14 @@ export default function SavedNamesScreen() {
 
     requestPermissions();
   }, []);
+
+  // Lisää tämä hook, jotta näkymä hakee tiedot aina kun käyttäjä palaa siihen
+  useFocusEffect(
+    useCallback(() => {
+      fetchPersons();
+    }, [])
+  );
+
 
   const requestPermissions = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
