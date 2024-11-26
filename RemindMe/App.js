@@ -5,6 +5,7 @@ import AuthScreen from './components/AuthScreen';
 import HomeScreen from './components/HomeScreen';
 import LogoutScreen from './components/LogoutScreen';
 import SavedNamesScreen from './components/SavedNamesScreen';
+import HolidaysScreen from './components/HolidaysScreen'; // Tuo HolidaysScreen
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -34,10 +35,12 @@ export default function App() {
             iconName = 'home';
           } else if (route.name === 'SavedNames') {
             iconName = 'people';
+          } else if (route.name === 'Holidays') {
+            iconName = 'calendar'; // Ikoni pyhäpäiville
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        headerRight: () => ( // Käytetään navigation-proppia HomeTabs-komponentissa
+        headerRight: () => (
           <Ionicons
             name="person-circle-outline"
             size={32}
@@ -52,7 +55,16 @@ export default function App() {
         children={() => <HomeScreen user={user} />}
         options={{ title: 'Home' }}
       />
-      <Tab.Screen name="SavedNames" component={SavedNamesScreen} options={{ title: 'Saved Names' }} />
+      <Tab.Screen
+        name="SavedNames"
+        component={SavedNamesScreen}
+        options={{ title: 'Saved Names' }}
+      />
+      <Tab.Screen
+        name="Holidays"
+        component={HolidaysScreen} // Lisää HolidaysScreen navigaattoriin
+        options={{ title: 'Holidays' }}
+      />
     </Tab.Navigator>
   );
 

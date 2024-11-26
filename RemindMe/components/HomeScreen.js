@@ -6,6 +6,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from '@react-navigation/native';
 
+
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
   const [birthday, setBirthday] = useState('');
@@ -129,6 +130,7 @@ export default function HomeScreen({ user }) {
           </View>
         )}
       />
+      
     </View>
   );
 }
