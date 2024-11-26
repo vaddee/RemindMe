@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Notifications from 'expo-notifications';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
@@ -12,35 +13,22 @@ export default function HomeScreen({ user }) {
   const [reminders, setReminders] = useState([]);
   const [intrest, setInterst] = useState('');
 
-  useEffect(() => {
-    if (user?.uid) {
-      fetchReminders();
-    }
-    
-    // Kuuntelee ilmoituksen saapumista ja näyttää alertin
-    const subscription = Notifications.addNotificationReceivedListener(notification => {
-      const { title, body } = notification.request.content;
-      Alert.alert(
-        title,
-        body,
-        [{ text: "OK", onPress: () => console.log("Ilmoitus hyväksytty") }]
-      );
-    });
-
-    // Puhdistaa kuuntelijan, kun komponentti unmountataan
-    return () => subscription.remove();
-  }, [user]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchReminders(); // Hakee tiedot aina, kun käyttäjä siirtyy tähän näkymään
+    }, [])
+  );
 
   const fetchReminders = async () => {
     try {
-      const remindersRef = collection(db, `users/${user.uid}/persons`);
+      const remindersRef = collection(db, users/${user.uid}/persons);
       const personsSnapshot = await getDocs(remindersRef);
       const reminderList = [];
 
       for (const personDoc of personsSnapshot.docs) {
         const personData = personDoc.data();
-        const remindersSubcollection = collection(db, `users/${user.uid}/persons/${personDoc.id}/reminders`);
-        
+        const remindersSubcollection = collection(db, users/${user.uid}/persons/${personDoc.id}/reminders);
+
         const remindersSnapshot = await getDocs(remindersSubcollection);
         remindersSnapshot.forEach((reminderDoc) => {
           const reminderData = reminderDoc.data();
@@ -67,7 +55,7 @@ export default function HomeScreen({ user }) {
   };
 
   const handleConfirm = (selectedDate) => {
-    const formattedDate = `${selectedDate.getDate()}.${selectedDate.getMonth() + 1}.${selectedDate.getFullYear()}`;
+    const formattedDate = ${selectedDate.getDate()}.${selectedDate.getMonth() + 1}.${selectedDate.getFullYear()};
     setBirthday(formattedDate);
     hideDatePicker();
   };
@@ -84,13 +72,13 @@ export default function HomeScreen({ user }) {
         return;
       }
 
-      await addDoc(collection(db, `users/${user.uid}/persons`), {
+      await addDoc(collection(db, users/${user.uid}/persons), {
         name: name,
         birthday: birthday,
         intrest: intrest,
       });
 
-      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest}`);
+      Alert.alert('Onnistui!', Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest});
       setName('');
       setBirthday('');
     } catch (error) {
@@ -109,13 +97,13 @@ export default function HomeScreen({ user }) {
         onChangeText={setName}
       />
 
-<TextInput
+      <TextInput
         style={{ borderBottomWidth: 1, marginBottom: 16, padding: 8 }}
-        placeholder="kiinnostuksen kohde"
+        placeholder="Kiinnostuksen kohde"
         value={intrest}
         onChangeText={setInterst}
       />
-      
+
       <Button title="Valitse syntymäpäivä" onPress={showDatePicker} />
       {birthday && <Text style={{ marginVertical: 8 }}>Syntymäpäivä: {birthday}</Text>}
 
