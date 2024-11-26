@@ -21,13 +21,13 @@ export default function HomeScreen({ user }) {
 
   const fetchReminders = async () => {
     try {
-      const remindersRef = collection(db, users/${user.uid}/persons);
+      const remindersRef = collection(db, `users/${user.uid}/persons`);
       const personsSnapshot = await getDocs(remindersRef);
       const reminderList = [];
 
       for (const personDoc of personsSnapshot.docs) {
         const personData = personDoc.data();
-        const remindersSubcollection = collection(db, users/${user.uid}/persons/${personDoc.id}/reminders);
+        const remindersSubcollection = collection(db, `users/${user.uid}/persons/${personDoc.id}/reminders`);
 
         const remindersSnapshot = await getDocs(remindersSubcollection);
         remindersSnapshot.forEach((reminderDoc) => {
@@ -55,7 +55,7 @@ export default function HomeScreen({ user }) {
   };
 
   const handleConfirm = (selectedDate) => {
-    const formattedDate = ${selectedDate.getDate()}.${selectedDate.getMonth() + 1}.${selectedDate.getFullYear()};
+    const formattedDate = `${selectedDate.getDate()}.${selectedDate.getMonth() + 1}.${selectedDate.getFullYear()}`;
     setBirthday(formattedDate);
     hideDatePicker();
   };
@@ -72,13 +72,13 @@ export default function HomeScreen({ user }) {
         return;
       }
 
-      await addDoc(collection(db, users/${user.uid}/persons), {
+      await addDoc(collection(db, `users/${user.uid}/persons`), {
         name: name,
         birthday: birthday,
         intrest: intrest,
       });
 
-      Alert.alert('Onnistui!', Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest});
+      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest}`);
       setName('');
       setBirthday('');
     } catch (error) {
