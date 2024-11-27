@@ -5,7 +5,8 @@ import AuthScreen from './components/AuthScreen';
 import HomeScreen from './components/HomeScreen';
 import LogoutScreen from './components/LogoutScreen';
 import SavedNamesScreen from './components/SavedNamesScreen';
-import HolidaysScreen from './components/HolidaysScreen'; // Tuo HolidaysScreen
+import HolidaysScreen from './components/HolidaysScreen';
+import HolidayRemindersScreen from './components/HolidayRemindersScreen'; // Lisää uusi näkymä
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
@@ -36,7 +37,9 @@ export default function App() {
           } else if (route.name === 'SavedNames') {
             iconName = 'people';
           } else if (route.name === 'Holidays') {
-            iconName = 'calendar'; // Ikoni pyhäpäiville
+            iconName = 'calendar';
+          } else if (route.name === 'HolidayReminders') {
+            iconName = 'notifications'; // Ikoni muistutuksille
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -62,8 +65,13 @@ export default function App() {
       />
       <Tab.Screen
         name="Holidays"
-        component={HolidaysScreen} // Lisää HolidaysScreen navigaattoriin
+        component={HolidaysScreen}
         options={{ title: 'Holidays' }}
+      />
+      <Tab.Screen
+        name="HolidayReminders"
+        component={HolidayRemindersScreen} // Lisää muistutukset
+        options={{ title: 'Reminders' }}
       />
     </Tab.Navigator>
   );
