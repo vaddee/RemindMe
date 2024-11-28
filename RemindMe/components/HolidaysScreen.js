@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { CALENDARIFIC_API_KEY } from '@env';
-import ReminderModal from './ReminderModal'; // Tuo ReminderModal
+import ReminderModal from './ReminderModal';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 
@@ -83,11 +83,12 @@ export default function HolidaysScreen() {
       />
       <ReminderModal
         visible={modalVisible}
-        selectedPerson={selectedHoliday} // Käytämme samaa prop-nimeä
+        selectedPersonOrHoliday={selectedHoliday}
         daysBefore={daysBefore}
         setDaysBefore={setDaysBefore}
         onSave={handleSaveReminder}
         onCancel={() => setModalVisible(false)}
+        type="holiday"
       />
     </View>
   );

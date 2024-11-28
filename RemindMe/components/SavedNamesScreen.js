@@ -158,6 +158,7 @@ export default function SavedNamesScreen() {
         setDaysBefore={setDaysBefore}
         onSave={handleSaveReminder}
         onCancel={() => setModalVisible(false)}
+        type="birthday" // Kerrotaan, että tämä on syntymäpäivä
       />
     </View>
   );
