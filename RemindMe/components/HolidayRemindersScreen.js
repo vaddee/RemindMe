@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { db, auth } from '../firebaseConfig';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 
 export default function HolidayRemindersScreen() {
   const [reminders, setReminders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [scheduledReminders, setScheduledReminders] = useState(new Set()); // Pidetään kirjaa ajoitetuista ilmoituksista
 
   // Haetaan muistutukset Firestoresta
   const fetchReminders = async () => {
@@ -27,14 +26,6 @@ export default function HolidayRemindersScreen() {
     }
   };
 
-  // Hakee tiedot, kun käyttäjä palaa näkymään
-  useFocusEffect(
-    useCallback(() => {
-      setLoading(true);
-      fetchReminders();
-    }, [])
-  );
-
   // Asetetaan ilmoituksen käsittelijä
   useEffect(() => {
     Notifications.setNotificationHandler({
@@ -46,68 +37,34 @@ export default function HolidayRemindersScreen() {
     });
   }, []);
 
-  // Poistetaan muistutus Firestoresta ja tilasta
-  const handleDeleteReminder = async (reminder) => {
-    Alert.alert(
-      "Poista muistutus",
-      `Haluatko varmasti poistaa muistutuksen: ${reminder.holidayName}?`,
-      [
-        { text: "Peruuta" },
-        {
-          text: "Poista",
-          onPress: async () => {
-            try {
-              const reminderRef = doc(db, `users/${auth.currentUser.uid}/holidayReminders/${reminder.id}`);
-              await deleteDoc(reminderRef);
-              Alert.alert("Muistutus poistettu!");
-
-              setReminders((prevReminders) => prevReminders.filter((r) => r.id !== reminder.id));
-              setScheduledReminders((prevScheduled) => {
-                const updatedSet = new Set(prevScheduled);
-                updatedSet.delete(reminder.id); // Poistetaan ajoitettu muistutus
-                return updatedSet;
-              });
-            } catch (error) {
-              console.error("Virhe muistutusta poistaessa:", error);
-              Alert.alert("Virhe muistutusta poistaessa.");
-            }
-          },
-          style: "destructive",
-        },
-      ]
-    );
-  };
-
-  // Ajastetaan ilmoitus (vain kerran jokaiselle muistutukselle)
+  // Ajastetaan ilmoitus (vain kerran)
   const scheduleNotification = async (reminder) => {
-    if (scheduledReminders.has(reminder.id)) {
-      console.log(`Reminder for ${reminder.holidayName} is already scheduled.`);
-      return; // Jos ilmoitus on jo ajoitettu, ei tehdä mitään
+    if (reminder.isScheduled) {
+      console.log(`Notification for ${reminder.holidayName} is already scheduled.`);
+      return; // Jos ilmoitus on jo ajastettu, ei tehdä mitään
     }
-
+  
     // **Oikea tapa:**
     /*
     const holidayDate = new Date(reminder.holidayDate); // Muutetaan juhlapyhän päivämäärä Date-objektiksi
     const reminderDate = new Date(holidayDate);
     reminderDate.setDate(holidayDate.getDate() - reminder.daysBefore); // Asetetaan muistutus X päivää ennen
-
-    const trigger = new Date(reminderDate);
-    trigger.setHours(9, 0, 0); // Ilmoitus ajastetaan klo 9:00 aamulla
-
+    reminderDate.setHours(9, 0, 0); // Ajastetaan muistutus klo 9:00 aamulla
+  
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `Muistutus: ${reminder.holidayName}`,
         body: `Tämä päivä lähestyy! Valmistelut kannattaa aloittaa.`,
         sound: true,
       },
-      trigger,
+      trigger: reminderDate,
     });
     */
-
-    // **Testaustapa: ilmoitus näkyy 10 sekunnin kuluttua**
+  
+    // **Testaustapa: ilmoitus 10 sekunnin kuluttua**
     console.log(`Scheduling test notification for ${reminder.holidayName} in 10 seconds.`);
     const testTrigger = new Date(Date.now() + 10000); // 10 sekuntia nykyhetkestä
-
+  
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `Testi: ${reminder.holidayName}`,
@@ -116,15 +73,55 @@ export default function HolidayRemindersScreen() {
       },
       trigger: testTrigger,
     });
+  
+    // Päivitetään Firestoreen, että muistutus on ajastettu
+    const reminderRef = doc(db, `users/${auth.currentUser.uid}/holidayReminders/${reminder.id}`);
+    await updateDoc(reminderRef, { isScheduled: true });
+  
+    console.log(`Notification scheduled successfully for ${reminder.holidayName}`);
+  };
+  
 
-    // Merkitään muistutus ajoitetuksi
-    setScheduledReminders((prevScheduled) => new Set(prevScheduled).add(reminder.id));
+  // Tarkistetaan ja ajastetaan ilmoitukset vain kerran
+  useEffect(() => {
+    reminders.forEach((reminder) => {
+      scheduleNotification(reminder);
+    });
+  }, [reminders]);
+
+  // Poistetaan muistutus Firestoresta ja tilasta
+  const handleDeleteReminder = async (reminder) => {
+    Alert.alert(
+      'Poista muistutus',
+      `Haluatko varmasti poistaa muistutuksen: ${reminder.holidayName}?`,
+      [
+        { text: 'Peruuta' },
+        {
+          text: 'Poista',
+          onPress: async () => {
+            try {
+              const reminderRef = doc(db, `users/${auth.currentUser.uid}/holidayReminders/${reminder.id}`);
+              await deleteDoc(reminderRef);
+              setReminders((prevReminders) => prevReminders.filter((r) => r.id !== reminder.id));
+              Alert.alert('Muistutus poistettu!');
+            } catch (error) {
+              console.error('Virhe muistutusta poistaessa:', error);
+              Alert.alert('Virhe muistutusta poistaessa.');
+            }
+          },
+          style: 'destructive',
+        },
+      ]
+    );
   };
 
-  // Tarkistetaan ja ajastetaan ilmoitukset
-  useEffect(() => {
-    reminders.forEach((reminder) => scheduleNotification(reminder));
-  }, [reminders]);
+  // Hakee tiedot, kun käyttäjä palaa näkymään
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      fetchReminders();
+    }, [])
+  );
 
   if (loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
