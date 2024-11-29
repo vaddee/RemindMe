@@ -59,6 +59,25 @@ Follow these steps to set up and run the project locally:
 
 ## **Firebase Setup**
 
+1. **Enable firestore Database**
+   - Navigate to the Firestore section in your Firebase project.
+   - Set up the database in "Test Mode" for development purposes.
+2. **Enable Authentication**
+   - Go to the Authentication section in your Firebase project.
+   - Enable email/password authentication.
+3. **Add the Firebase config file**
+   Create a .env file in the root directory and add the following:
+   
+   ```bash
+
+   FIREBASE_API_KEY=your_firebase_api_key
+   FIREBASE_AUTH_DOMAIN=your_auth_domain
+   FIREBASE_PROJECT_ID=your_project_id
+   FIREBASE_STORAGE_BUCKET=your_storage_bucket
+   FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+   FIREBASE_APP_ID=your_app_id
+Replace the placeholders with your Firebase configuration details.
+
 ## **Running the App**
 1. Start the Expo development server
     ```bash
