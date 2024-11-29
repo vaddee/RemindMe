@@ -4,6 +4,7 @@ import { db, auth } from '../firebaseConfig';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function HolidayRemindersScreen() {
   const [reminders, setReminders] = useState([]);
@@ -43,12 +44,12 @@ export default function HolidayRemindersScreen() {
       console.log(`Notification for ${reminder.holidayName} is already scheduled.`);
       return; // Jos ilmoitus on jo ajastettu, ei tehdä mitään
     }
-  
+
     // **Oikea tapa:**
     /*
     const holidayDate = new Date(reminder.holidayDate); // Muutetaan juhlapyhän päivämäärä Date-objektiksi
     const reminderDate = new Date(holidayDate);
-    reminderDate.setDate(holidayDate.getDate() - reminder.daysBefore); // Asetetaan muistutus X päivää ennen
+    reminderDate.setDate(reminderDate.getDate() - reminder.daysBefore); // Asetetaan muistutus X päivää ennen
     reminderDate.setHours(9, 0, 0); // Ajastetaan muistutus klo 9:00 aamulla
   
     await Notifications.scheduleNotificationAsync({
@@ -60,11 +61,11 @@ export default function HolidayRemindersScreen() {
       trigger: reminderDate,
     });
     */
-  
+
     // **Testaustapa: ilmoitus 10 sekunnin kuluttua**
     console.log(`Scheduling test notification for ${reminder.holidayName} in 10 seconds.`);
     const testTrigger = new Date(Date.now() + 10000); // 10 sekuntia nykyhetkestä
-  
+
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `Testi: ${reminder.holidayName}`,
@@ -73,14 +74,13 @@ export default function HolidayRemindersScreen() {
       },
       trigger: testTrigger,
     });
-  
+
     // Päivitetään Firestoreen, että muistutus on ajastettu
     const reminderRef = doc(db, `users/${auth.currentUser.uid}/holidayReminders/${reminder.id}`);
     await updateDoc(reminderRef, { isScheduled: true });
-  
+
     console.log(`Notification scheduled successfully for ${reminder.holidayName}`);
   };
-  
 
   // Tarkistetaan ja ajastetaan ilmoitukset vain kerran
   useEffect(() => {
@@ -133,15 +133,30 @@ export default function HolidayRemindersScreen() {
         data={reminders}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={{ padding: 8, borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
-            <Text style={{ fontSize: 18 }}>{item.holidayName}</Text>
-            <Text style={{ color: '#888' }}>{item.holidayDate}</Text>
-            <Text style={{ color: '#444' }}>Muistutus {item.daysBefore} päivää ennen</Text>
+          <View
+            style={{
+              padding: 8,
+              borderBottomWidth: 1,
+              borderBottomColor: '#ddd',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 18 }}>{item.holidayName}</Text>
+              <Text style={{ color: '#888' }}>{item.holidayDate}</Text>
+              <Text style={{ color: '#444' }}>Muistutus {item.daysBefore} päivää ennen</Text>
+            </View>
             <TouchableOpacity
               onPress={() => handleDeleteReminder(item)}
-              style={{ backgroundColor: 'red', padding: 8, borderRadius: 5, marginTop: 8 }}
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginLeft: 12,
+              }}
             >
-              <Text style={{ color: 'white', textAlign: 'center' }}>Poista muistutus</Text>
+              <MaterialIcons name="delete" size={24} color="red" />
             </TouchableOpacity>
           </View>
         )}
