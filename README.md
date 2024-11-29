@@ -35,7 +35,9 @@ Whether it's a loved one's birthday or a public holiday like Independence day, *
 
 - **Frontend:** React Native, Expo
 - **Backend:** Firebase (Authentication & Firestore)
-- **Additional Tools:** OpenAI API (for gift suggestions)
+- **APIs:** 
+  - OpenAI API (for gift suggestions)
+  - Calendarific API (for public holiday data)
 - **Notifications:** Expo Notifications API
 
 ---
@@ -76,6 +78,10 @@ Follow these steps to set up and run the project locally:
    FIREBASE_STORAGE_BUCKET=your_storage_bucket
    FIREBASE_MESSAGING_SENDER_ID=your_sender_id
    FIREBASE_APP_ID=your_app_id
+
+   CALENDARIFIC_API_KEY=your_calendarific_api_key
+   OPENAI_API_KEY=your_openai_api_key
+
 Replace the placeholders with your Firebase configuration details.
 
 ## **Running the App**
