@@ -12,7 +12,7 @@ const openAiApi = axios.create({
 
 // Funktio lahjaehdotuksen generointiin
 export const generateGiftSuggestion = async (intrest) => {
-  const prompt = `Ehdota lahjaideoita henkilölle, jonka kiinnostuksen kohteena on ${intrest}.`;
+  const prompt = `Ehdota yksi lahjaidea henkilölle, jonka kiinnostuksen kohteena on ${intrest}.`;
 
   try {
     // GPT-3.5-turbon päätepisteen käyttö
