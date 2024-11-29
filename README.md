@@ -1,6 +1,6 @@
 # RemindMe - Your Personal Reminder App
 
-**RemindMe** is a mobile application built with **React Native**, **Expo**, and **Firebase**. It helps users remember important dates, such as birthdays and holidays like Valentine's Day. The app allows users to create a list of people, save their personal preferences, and receive reminders before important dates.
+**RemindMe** is a mobile application built with **React Native**, **Expo**, and **Firebase**. It helps users remember important dates, such as birthdays and holidays like Independence day. The app allows users to create a list of people, save their personal preferences, and receive reminders before important dates.
 
 ---
 
