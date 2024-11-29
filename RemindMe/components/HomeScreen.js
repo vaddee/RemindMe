@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, Button, Alert, FlatList } from 'react-native';
+import { View, Text, TextInput, Alert, FlatList, TouchableOpacity } from 'react-native';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from '@react-navigation/native';
-
+import buttonStyles from '../styles/buttonStyles';
+import textStyles from '../styles/textStyles'; // Importoidaan textStyles
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
@@ -90,7 +91,7 @@ export default function HomeScreen({ user }) {
 
   return (
     <View style={{ padding: 16, marginTop: 100 }}>
-      <Text style={{ fontSize: 24, marginBottom: 16 }}>Syötä nimi ja syntymäpäivä</Text>
+      <Text style={textStyles.header}>Syötä nimi ja syntymäpäivä</Text>
       <TextInput
         style={{ borderBottomWidth: 1, marginBottom: 16, padding: 8 }}
         placeholder="Syötä nimi"
@@ -105,8 +106,11 @@ export default function HomeScreen({ user }) {
         onChangeText={setInterst}
       />
 
-      <Button title="Valitse syntymäpäivä" onPress={showDatePicker} />
-      {birthday && <Text style={{ marginVertical: 8 }}>Syntymäpäivä: {birthday}</Text>}
+      <TouchableOpacity onPress={showDatePicker} style={buttonStyles.button}>
+        <Text style={buttonStyles.buttonText}>Valitse syntymäpäivä</Text>
+      </TouchableOpacity>
+
+      {birthday && <Text style={textStyles.highlight}>Syntymäpäivä: {birthday}</Text>}
 
       <DateTimePickerModal
         isVisible={isDatePickerVisible}
@@ -115,22 +119,22 @@ export default function HomeScreen({ user }) {
         onCancel={hideDatePicker}
       />
 
-      <Button title="Tallenna" onPress={savePerson} />
+      <TouchableOpacity onPress={savePerson} style={buttonStyles.button}>
+        <Text style={buttonStyles.buttonText}>Tallenna</Text>
+      </TouchableOpacity>
 
-      {/* Tulevat muistutukset */}
-      <Text style={{ fontSize: 24, marginVertical: 16 }}>Tulevat muistutukset</Text>
+      <Text style={textStyles.header}>Tulevat muistutukset</Text>
       <FlatList
         data={reminders}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={{ padding: 8, borderBottomWidth: 1 }}>
-            <Text>Henkilö: {item.name}</Text>
-            <Text>Syntymäpäivä: {item.birthday}</Text>
-            <Text>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
+            <Text style={textStyles.subHeader}>Henkilö: {item.name}</Text>
+            <Text style={textStyles.bodyText}>Syntymäpäivä: {item.birthday}</Text>
+            <Text style={textStyles.bodyText}>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
           </View>
         )}
       />
-      
     </View>
   );
 }

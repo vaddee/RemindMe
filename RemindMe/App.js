@@ -56,22 +56,22 @@ export default function App() {
       <Tab.Screen
         name="Home"
         children={() => <HomeScreen user={user} />}
-        options={{ title: 'Home' }}
+        options={{ title: 'Koti' }}
       />
       <Tab.Screen
         name="SavedNames"
         component={SavedNamesScreen}
-        options={{ title: 'Saved Names' }}
+        options={{ title: 'Tallennetut nimet' }}
       />
       <Tab.Screen
         name="Holidays"
         component={HolidaysScreen}
-        options={{ title: 'Holidays' }}
+        options={{ title: 'Juhlapyhät' }}
       />
       <Tab.Screen
         name="HolidayReminders"
         component={HolidayRemindersScreen} // Lisää muistutukset
-        options={{ title: 'Reminders' }}
+        options={{ title: 'Muistutukset' }}
       />
     </Tab.Navigator>
   );

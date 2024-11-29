@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Button, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, Modal } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { generateGiftSuggestion } from '../services/openAiService';
 import modalStyles from '../styles/modalStyles';
+import buttonStyles from '../styles/buttonStyles'; // Tyylit painikkeille
+import textStyles from '../styles/textStyles'; // Tyylit tekstille
 
 export default function PersonItem({ person, onAddReminder, onDelete }) {
   const [loading, setLoading] = useState(false);
@@ -26,18 +28,26 @@ export default function PersonItem({ person, onAddReminder, onDelete }) {
   return (
     <View style={{ padding: 8, borderBottomWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
       <View>
-        <Text>Name: {person.name}</Text>
-        <Text>Birthday: {person.birthday}</Text>
-        <Text>Intrest: {person.intrest}</Text>
-        <Button title="Lisää muistutus" onPress={() => onAddReminder(person)} />
-        <Button
-          title={loading ? 'Ladataan...' : 'Ehdota lahjaidea'}
+        <Text style={textStyles.header}>Nimi: {person.name}</Text>
+        <Text style={textStyles.subHeader}>Syntymäpäivä: {person.birthday}</Text>
+        <Text style={textStyles.bodyText}>Kiinnostuksen kohde: {person.intrest}</Text>
+
+        {/* Korvataan Button omilla tyyleillä */}
+        <TouchableOpacity style={buttonStyles.button} onPress={() => onAddReminder(person)}>
+          <Text style={buttonStyles.buttonText}>Lisää muistutus</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[buttonStyles.button, loading && { backgroundColor: '#B0C4DE' }]} // Muutetaan väri latauksen aikana
           onPress={handleGenerateSuggestion}
           disabled={loading}
-        />
+        >
+          <Text style={buttonStyles.buttonText}>{loading ? 'Ladataan...' : 'Ehdota lahjaidea'}</Text>
+        </TouchableOpacity>
       </View>
+
       <TouchableOpacity onPress={() => onDelete(person)}>
-        <MaterialIcons name="delete" size={24} color="red" />
+        <MaterialIcons name="delete" size={32} color="red" /> {/* Suurempi koko ikonille */}
       </TouchableOpacity>
 
       {/* Modaali lahjaidealle */}

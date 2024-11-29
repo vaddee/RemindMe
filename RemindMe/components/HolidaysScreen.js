@@ -4,6 +4,7 @@ import { CALENDARIFIC_API_KEY } from '@env';
 import ReminderModal from './ReminderModal';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
+import buttonStyles from '../styles/buttonStyles'; // Importoi buttonStyles
 
 export default function HolidaysScreen() {
   const [holidays, setHolidays] = useState([]);
@@ -74,9 +75,9 @@ export default function HolidaysScreen() {
             <Text style={{ color: '#888' }}>{item.date.iso}</Text>
             <TouchableOpacity
               onPress={() => handleAddReminder(item)}
-              style={{ backgroundColor: 'blue', padding: 8, borderRadius: 5, marginTop: 8 }}
+              style={buttonStyles.button} // Käytä buttonStyles-tyyliä
             >
-              <Text style={{ color: 'white', textAlign: 'center' }}>Lisää muistutus</Text>
+              <Text style={buttonStyles.buttonText}>Lisää muistutus</Text>
             </TouchableOpacity>
           </View>
         )}

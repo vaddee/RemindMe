@@ -53,7 +53,7 @@ const modalStyles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#ffffff', // Valkoinen teksti
+    color: '#ffffff', // Valkoinen 
   },
   cancelButton: {
     backgroundColor: 'grey', // Harmaa peruutuspainikkeelle

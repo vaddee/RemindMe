@@ -81,25 +81,36 @@ export default function SavedNamesScreen() {
       alert("Muistutusta ei voitu lisätä.");
     }
   };
+/*
+  const scheduleNotification = (person, daysBefore) => {
+  const [day, month] = person.birthday.split('.').map(Number); // Oletetaan, että birthday on "20.5.1996"
+  const currentYear = new Date().getFullYear(); // Käytä nykyistä vuotta
+  const nextBirthday = new Date(currentYear, month - 1, day); // Luo syntymäpäivä nykyiselle vuodelle
 
- /*  const scheduleNotification = (person, daysBefore) => {
-    const [day, month, year] = person.birthday.split('.').map(Number); // Muunna syntymäpäivä Date-objektiksi
-    const birthday = new Date(year, month - 1, day);
-    const reminderDate = new Date(birthday);
-    reminderDate.setDate(birthday.getDate() - daysBefore);
+  // Jos syntymäpäivä on jo mennyt tänä vuonna, käytä seuraavaa vuotta
+  if (nextBirthday < new Date()) {
+    nextBirthday.setFullYear(currentYear + 1);
+  }
+
+  const reminderDate = new Date(nextBirthday);
+  reminderDate.setDate(nextBirthday.getDate() - daysBefore); // Vähennetään päivät muistutusta varten
+
+  console.log(`Scheduling notification for ${person.name} on ${reminderDate.toISOString()}`);
+
+  // Asetetaan muistutus
+  Notifications.scheduleNotificationAsync({
+    content: {
+      title: "Muistutus",
+      body: `${person.name} täyttää pian vuosia!`,
+      sound: true,
+    },
+    trigger: {
+      date: reminderDate,
+    },
+  });
+};
+  */
   
-    const trigger = new Date(reminderDate);
-    trigger.setHours(9, 0, 0);
-  
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Muistutus",
-        body: `${person.name} täyttää pian vuosia!`,
-        sound: true,
-      },
-      trigger,
-    });
-  }; */
   const scheduleNotification = (person, daysBefore) => {
     console.log(`Scheduling notification for ${person.name} in 1 minute`);
     const testTrigger = new Date(Date.now() + 10000); // 10sec nykyhetkestä testin vuoksi
@@ -113,7 +124,7 @@ export default function SavedNamesScreen() {
       trigger: testTrigger,
     });
   };
-  
+ 
   
   const handleDeletePerson = async (person) => {
     Alert.alert(
