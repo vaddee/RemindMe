@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { collection, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import * as Notifications from 'expo-notifications';
 import { MaterialIcons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message'; // Importoidaan Toast
+import CustomToast from '../styles/CustomToast'; // Importoidaan CustomToast
 
 export default function HolidayRemindersScreen() {
   const [reminders, setReminders] = useState([]);
@@ -24,6 +26,11 @@ export default function HolidayRemindersScreen() {
     } catch (error) {
       console.error('Error fetching holiday reminders:', error);
       setLoading(false);
+      Toast.show({
+        type: 'customToast',
+        text1: 'Virhe',
+        text2: 'Muistutuksia ei voitu hakea.',
+      });
     }
   };
 
@@ -91,28 +98,30 @@ export default function HolidayRemindersScreen() {
 
   // Poistetaan muistutus Firestoresta ja tilasta
   const handleDeleteReminder = async (reminder) => {
-    Alert.alert(
-      'Poista muistutus',
-      `Haluatko varmasti poistaa muistutuksen: ${reminder.holidayName}?`,
-      [
-        { text: 'Peruuta' },
-        {
-          text: 'Poista',
-          onPress: async () => {
-            try {
-              const reminderRef = doc(db, `users/${auth.currentUser.uid}/holidayReminders/${reminder.id}`);
-              await deleteDoc(reminderRef);
-              setReminders((prevReminders) => prevReminders.filter((r) => r.id !== reminder.id));
-              Alert.alert('Muistutus poistettu!');
-            } catch (error) {
-              console.error('Virhe muistutusta poistaessa:', error);
-              Alert.alert('Virhe muistutusta poistaessa.');
-            }
-          },
-          style: 'destructive',
-        },
-      ]
-    );
+    Toast.show({
+      type: 'customToast',
+      text1: 'Poistetaan muistutus',
+      text2: `Poistetaan muistutus: ${reminder.holidayName}...`,
+    });
+
+    try {
+      const reminderRef = doc(db, `users/${auth.currentUser.uid}/holidayReminders/${reminder.id}`);
+      await deleteDoc(reminderRef);
+      setReminders((prevReminders) => prevReminders.filter((r) => r.id !== reminder.id));
+
+      Toast.show({
+        type: 'customToast',
+        text1: 'Muistutus poistettu',
+        text2: `${reminder.holidayName} poistettiin onnistuneesti.`,
+      });
+    } catch (error) {
+      console.error('Virhe muistutusta poistaessa:', error);
+      Toast.show({
+        type: 'customToast',
+        text1: 'Virhe',
+        text2: 'Muistutusta ei voitu poistaa.',
+      });
+    }
   };
 
   // Hakee tiedot, kun käyttäjä palaa näkymään
@@ -161,6 +170,8 @@ export default function HolidayRemindersScreen() {
           </View>
         )}
       />
+      {/* Mukautettu Toast-komponentti */}
+      <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );
 }

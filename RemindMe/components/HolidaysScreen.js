@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { CALENDARIFIC_API_KEY } from '@env';
 import ReminderModal from './ReminderModal';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 import buttonStyles from '../styles/buttonStyles'; // Importoi buttonStyles
+import Toast from 'react-native-toast-message'; // Importoidaan Toast
+import CustomToast from '../styles/CustomToast'; // Importoidaan CustomToast
 
 export default function HolidaysScreen() {
   const [holidays, setHolidays] = useState([]);
@@ -38,7 +40,11 @@ export default function HolidaysScreen() {
 
   const handleSaveReminder = async () => {
     if (!daysBefore || isNaN(daysBefore) || daysBefore <= 0) {
-      alert('Syötä positiivinen luku päivien määräksi.');
+      Toast.show({
+        type: 'customToast',
+        text1: 'Virhe',
+        text2: 'Syötä positiivinen luku päivien määräksi.',
+      });
       return;
     }
 
@@ -51,12 +57,21 @@ export default function HolidaysScreen() {
         createdAt: new Date(),
       });
 
-      Alert.alert('Muistutus tallennettu', `Muistutus ${selectedHoliday.name} -päivää varten lisätty.`);
+      Toast.show({
+        type: 'customToast',
+        text1: 'Muistutus tallennettu',
+        text2: `Muistutus ${selectedHoliday.name} -päivää varten lisätty.`,
+      });
+
       setModalVisible(false);
       setDaysBefore('');
     } catch (error) {
       console.error('Error saving holiday reminder:', error);
-      alert('Muistutusta ei voitu tallentaa.');
+      Toast.show({
+        type: 'customToast',
+        text1: 'Virhe',
+        text2: 'Muistutusta ei voitu tallentaa.',
+      });
     }
   };
 
@@ -91,6 +106,8 @@ export default function HolidaysScreen() {
         onCancel={() => setModalVisible(false)}
         type="holiday"
       />
+      {/* Mukautettu Toast-komponentti */}
+      <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );
 }

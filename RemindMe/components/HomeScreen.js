@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, TextInput, Alert, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity } from 'react-native';
 import { db } from '../firebaseConfig';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -7,6 +7,8 @@ import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from '@react-navigation/native';
 import buttonStyles from '../styles/buttonStyles';
 import textStyles from '../styles/textStyles'; // Importoidaan textStyles
+import Toast from 'react-native-toast-message';
+import CustomToast from '../styles/CustomToast'; // Importoidaan CustomToast
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
@@ -64,13 +66,21 @@ export default function HomeScreen({ user }) {
 
   const savePerson = async () => {
     if (name === '' || !birthday) {
-      Alert.alert('Virhe', 'Täytä sekä nimi että syntymäpäivä.');
+      Toast.show({
+        type: 'customToast',
+        text1: 'Virhe',
+        text2: 'Täytä sekä nimi että syntymäpäivä.',
+      });
       return;
     }
 
     try {
       if (!user?.uid) {
-        Alert.alert('Virhe', 'Käyttäjä ei ole määritelty.');
+        Toast.show({
+          type: 'customToast',
+          text1: 'Virhe',
+          text2: 'Käyttäjä ei ole määritelty.',
+        });
         return;
       }
 
@@ -80,12 +90,21 @@ export default function HomeScreen({ user }) {
         intrest: intrest,
       });
 
-      Alert.alert('Onnistui!', `Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest}`);
+      Toast.show({
+        type: 'customToast',
+        text1: 'Onnistui!',
+        text2: `Tallennettiin nimi: ${name}, syntymäpäivä: ${birthday}, kiinnostuksen kohde: ${intrest}`,
+      });
+
       setName('');
       setBirthday('');
     } catch (error) {
       console.log('Error saving document:', error);
-      Alert.alert('Virhe', 'Tietojen tallentaminen epäonnistui: ' + error.message);
+      Toast.show({
+        type: 'customToast',
+        text1: 'Virhe',
+        text2: 'Tietojen tallentaminen epäonnistui: ' + error.message,
+      });
     }
   };
 
@@ -135,6 +154,9 @@ export default function HomeScreen({ user }) {
           </View>
         )}
       />
+
+      {/* Mukautettu Toast-komponentti */}
+      <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );
 }
