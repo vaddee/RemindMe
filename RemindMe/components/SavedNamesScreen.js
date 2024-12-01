@@ -1,6 +1,6 @@
 // SavedNamesScreen.js
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import { db, auth } from '../firebaseConfig';
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import * as Notifications from 'expo-notifications';
@@ -173,9 +173,18 @@ export default function SavedNamesScreen() {
       <FlatList
         data={savedPersons}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => <PersonItem person={item}
-         onAddReminder={handleAddReminder}
-         onDelete={handleDeletePerson} />}
+        renderItem={({ item }) => (
+          <PersonItem
+            person={item}
+            onAddReminder={handleAddReminder}
+            onDelete={handleDeletePerson}
+          />
+        )}
+        ListEmptyComponent={
+          <Text style={{ textAlign: 'center', marginTop: 16, fontSize: 16, color: '#888' }}>
+            Ei tallennettuja henkilöitä
+          </Text>
+        }
       />
       <ReminderModal
         visible={modalVisible}
@@ -189,4 +198,5 @@ export default function SavedNamesScreen() {
       <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} /> {/* Mukautettu toast */}
     </View>
   );
+
 }

@@ -169,9 +169,22 @@ export default function HolidayRemindersScreen() {
             </TouchableOpacity>
           </View>
         )}
+        ListEmptyComponent={
+          <Text
+            style={{
+              textAlign: 'center',
+              marginTop: 16,
+              fontSize: 16,
+              color: '#888',
+            }}
+          >
+            Ei tulevia muistutuksia
+          </Text>
+        }
       />
       {/* Mukautettu Toast-komponentti */}
       <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );
+  
 }

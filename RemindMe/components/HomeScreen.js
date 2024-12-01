@@ -144,16 +144,22 @@ export default function HomeScreen({ user }) {
 
       <Text style={textStyles.header}>Tulevat muistutukset</Text>
       <FlatList
-        data={reminders}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={{ padding: 8, borderBottomWidth: 1 }}>
-            <Text style={textStyles.subHeader}>Henkilö: {item.name}</Text>
-            <Text style={textStyles.bodyText}>Syntymäpäivä: {item.birthday}</Text>
-            <Text style={textStyles.bodyText}>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
-          </View>
-        )}
-      />
+  data={reminders}
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => (
+    <View style={{ padding: 8, borderBottomWidth: 1 }}>
+      <Text style={textStyles.subHeader}>Henkilö: {item.name}</Text>
+      <Text style={textStyles.bodyText}>Syntymäpäivä: {item.birthday}</Text>
+      <Text style={textStyles.bodyText}>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
+    </View>
+  )}
+  ListEmptyComponent={
+    <Text style={{ textAlign: 'center', marginTop: 16, fontSize: 16, color: '#888' }}>
+      Ei muistutuksia
+    </Text>
+  }
+/>
+
 
       {/* Mukautettu Toast-komponentti */}
       <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
