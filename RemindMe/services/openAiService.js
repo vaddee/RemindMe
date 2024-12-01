@@ -22,7 +22,7 @@ export const generateGiftSuggestion = async (intrest) => {
         { role: 'system', content: 'Sinä olet lahjaideoita ehdottava assistentti.' },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 100, // Maksimi määrä vastauksen sanoja
+      max_tokens: 200, // Maksimi määrä vastauksen sanoja
       temperature: 0.7, // Luovuuden taso
     });
 

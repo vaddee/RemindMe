@@ -58,6 +58,20 @@ const modalStyles = StyleSheet.create({
   cancelButton: {
     backgroundColor: 'grey', // Harmaa peruutuspainikkeelle
   },
+  smallButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 8, // Pienempi pystysuuntainen täyte
+    paddingHorizontal: 16, // Pienempi vaakasuuntainen täyte
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 5, // Väli painikkeiden välillä
+  },
+  smallButtonText: {
+    color: '#FFFFFF',
+    fontSize: 14, // Pienempi fonttikoko
+    fontWeight: 'bold',
+  },
 });
 
 export default modalStyles;
