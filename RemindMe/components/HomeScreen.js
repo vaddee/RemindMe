@@ -98,6 +98,7 @@ export default function HomeScreen({ user }) {
 
       setName('');
       setBirthday('');
+      setInterst('');
     } catch (error) {
       console.log('Error saving document:', error);
       Toast.show({
