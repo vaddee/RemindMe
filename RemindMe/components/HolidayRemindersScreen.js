@@ -182,7 +182,7 @@ export default function HolidayRemindersScreen() {
           </Text>
         }
       />
-      {/* Mukautettu Toast-komponentti */}
+      
       <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );

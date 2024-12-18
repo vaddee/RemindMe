@@ -32,7 +32,7 @@ export default function PersonItem({ person, onAddReminder, onDelete }) {
         <Text style={textStyles.subHeader}>Syntymäpäivä: {person.birthday}</Text>
         <Text style={textStyles.bodyText}>Kiinnostuksen kohde: {person.intrest}</Text>
 
-        {/* muokattavamp Button */}
+        
         <TouchableOpacity style={buttonStyles.button} onPress={() => onAddReminder(person)}>
           <Text style={buttonStyles.buttonText}>Lisää muistutus</Text>
         </TouchableOpacity>

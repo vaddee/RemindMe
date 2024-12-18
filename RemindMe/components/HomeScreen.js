@@ -6,9 +6,9 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import * as Notifications from 'expo-notifications';
 import { useFocusEffect } from '@react-navigation/native';
 import buttonStyles from '../styles/buttonStyles';
-import textStyles from '../styles/textStyles'; // Importoidaan textStyles
+import textStyles from '../styles/textStyles';
 import Toast from 'react-native-toast-message';
-import CustomToast from '../styles/CustomToast'; // Importoidaan CustomToast
+import CustomToast from '../styles/CustomToast';
 
 export default function HomeScreen({ user }) {
   const [name, setName] = useState('');
@@ -145,24 +145,24 @@ export default function HomeScreen({ user }) {
 
       <Text style={textStyles.header}>Tulevat muistutukset</Text>
       <FlatList
-  data={reminders}
-  keyExtractor={(item) => item.id}
-  renderItem={({ item }) => (
-    <View style={{ padding: 8, borderBottomWidth: 1 }}>
-      <Text style={textStyles.subHeader}>Henkilö: {item.name}</Text>
-      <Text style={textStyles.bodyText}>Syntymäpäivä: {item.birthday}</Text>
-      <Text style={textStyles.bodyText}>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
-    </View>
-  )}
-  ListEmptyComponent={
-    <Text style={{ textAlign: 'center', marginTop: 16, fontSize: 16, color: '#888' }}>
-      Ei muistutuksia
-    </Text>
-  }
-/>
+        data={reminders}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={{ padding: 8, borderBottomWidth: 1 }}>
+            <Text style={textStyles.subHeader}>Henkilö: {item.name}</Text>
+            <Text style={textStyles.bodyText}>Syntymäpäivä: {item.birthday}</Text>
+            <Text style={textStyles.bodyText}>Muistutus {item.daysBefore} päivää ennen syntymäpäivää</Text>
+          </View>
+        )}
+        ListEmptyComponent={
+          <Text style={{ textAlign: 'center', marginTop: 16, fontSize: 16, color: '#888' }}>
+            Ei muistutuksia
+          </Text>
+        }
+      />
 
 
-      {/* Mukautettu Toast-komponentti */}
+
       <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );

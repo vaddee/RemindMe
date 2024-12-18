@@ -1,4 +1,4 @@
-// SavedNamesScreen.js
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, FlatList, Text } from 'react-native';
 import { db, auth } from '../firebaseConfig';
@@ -7,8 +7,8 @@ import * as Notifications from 'expo-notifications';
 import ReminderModal from './ReminderModal';
 import PersonItem from './PersonItem';
 import { useFocusEffect } from '@react-navigation/native';
-import Toast from 'react-native-toast-message'; // Importoidaan Toast
-import CustomToast from '../styles/CustomToast'; // Importoidaan CustomToast
+import Toast from 'react-native-toast-message'; 
+import CustomToast from '../styles/CustomToast'; 
 
 export default function SavedNamesScreen() {
   const [savedPersons, setSavedPersons] = useState([]);
@@ -38,7 +38,7 @@ export default function SavedNamesScreen() {
     requestPermissions();
   }, []);
 
-  // Lisää tämä hook, jotta näkymä hakee tiedot aina kun käyttäjä palaa siihen
+ 
   useFocusEffect(
     useCallback(() => {
       fetchPersons();
@@ -102,10 +102,10 @@ export default function SavedNamesScreen() {
   /*
   const scheduleNotification = (person, daysBefore) => {
   const [day, month] = person.birthday.split('.').map(Number); // Oletetaan, että birthday on "20.5.1996"
-  const currentYear = new Date().getFullYear(); // Käytä nykyistä vuotta
+  const currentYear = new Date().getFullYear(); 
   const nextBirthday = new Date(currentYear, month - 1, day); // Luo syntymäpäivä nykyiselle vuodelle
 
-  // Jos syntymäpäivä on jo mennyt tänä vuonna, käytä seuraavaa vuotta
+  
   if (nextBirthday < new Date()) {
     nextBirthday.setFullYear(currentYear + 1);
   }
@@ -130,7 +130,7 @@ export default function SavedNamesScreen() {
   */
 
   const scheduleNotification = (person, daysBefore) => {
-    console.log(`Scheduling notification for ${person.name} in 1 minute`);
+    console.log(`Scheduling notification for ${person.name} in 10 seconds`);
     const testTrigger = new Date(Date.now() + 10000); // 10sec nykyhetkestä testin vuoksi
 
     Notifications.scheduleNotificationAsync({
@@ -195,7 +195,7 @@ export default function SavedNamesScreen() {
         onCancel={() => setModalVisible(false)}
         type="birthday" // Kerrotaan, että tämä on syntymäpäivä
       />
-      <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} /> {/* Mukautettu toast */}
+      <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} /> 
     </View>
   );
 

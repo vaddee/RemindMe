@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { OPENAI_API_KEY } from '@env'; // Lataa API-avain ympäristömuuttujista
+import { OPENAI_API_KEY } from '@env';
 
-// Luo Axios-instanse OpenAI API:lle
+
 const openAiApi = axios.create({
   baseURL: 'https://api.openai.com/v1',
   headers: {
@@ -15,15 +15,15 @@ export const generateGiftSuggestion = async (intrest) => {
   const prompt = `Ehdota yksi lahjaidea henkilölle, jonka kiinnostuksen kohteena on ${intrest}.`;
 
   try {
-    // GPT-3.5-turbon päätepisteen käyttö
+    
     const response = await openAiApi.post('/chat/completions', {
-      model: 'gpt-3.5-turbo', // Mallin nimi
+      model: 'gpt-3.5-turbo', 
       messages: [
         { role: 'system', content: 'Sinä olet lahjaideoita ehdottava assistentti.' },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 200, // Maksimi määrä vastauksen sanoja
-      temperature: 0.7, // Luovuuden taso
+      max_tokens: 200, 
+      temperature: 0.7, 
     });
 
     // Palautetaan vastauksen sisältö

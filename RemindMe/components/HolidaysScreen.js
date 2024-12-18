@@ -4,9 +4,9 @@ import { CALENDARIFIC_API_KEY } from '@env';
 import ReminderModal from './ReminderModal';
 import { db, auth } from '../firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
-import buttonStyles from '../styles/buttonStyles'; // Importoi buttonStyles
-import Toast from 'react-native-toast-message'; // Importoidaan Toast
-import CustomToast from '../styles/CustomToast'; // Importoidaan CustomToast
+import buttonStyles from '../styles/buttonStyles'; 
+import Toast from 'react-native-toast-message'; 
+import CustomToast from '../styles/CustomToast'; 
 
 export default function HolidaysScreen() {
   const [holidays, setHolidays] = useState([]);
@@ -106,7 +106,7 @@ export default function HolidaysScreen() {
         onCancel={() => setModalVisible(false)}
         type="holiday"
       />
-      {/* Mukautettu Toast-komponentti */}
+     
       <Toast config={{ customToast: (props) => <CustomToast {...props} /> }} />
     </View>
   );
